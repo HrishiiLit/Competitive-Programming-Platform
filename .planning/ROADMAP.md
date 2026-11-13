@@ -41,7 +41,8 @@ Plans:
   1. Organizers can create and configure contests with fixed start/end timestamps and freeze thresholds.
   2. Problems can be created with Markdown/LaTeX statements, time/memory limits, and test cases.
   3. Problem versions lock immutably once attached to an active or past contest.
-**Plans**: 1 plan
+**Plans**: 1/1 plans executed
+- [x] 02-01-PLAN.md
 
 ### Phase 3: Submission Ingestion, Transactional Outbox & Judge0 Integration
 **Goal**: Deliver zero-loss submission ingestion, transactional outbox event emission, and asynchronous Judge0 code evaluation via Celery.
