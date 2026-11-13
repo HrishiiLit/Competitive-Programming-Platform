@@ -2,10 +2,10 @@
 
 ## Identity & Access Control (AUTH)
 
-- [ ] **AUTH-01**: User registration with username uniqueness, email validation, and Argon2id password hashing.
-- [ ] **AUTH-02**: JWT-based access token issuance (15-min) and secure database-backed refresh token rotation (7-day, SHA-256 hashed).
-- [ ] **AUTH-03**: Role-based access control (RBAC) enforcing Participant, Organizer, Proctor, and Administrator capabilities.
-- [ ] **AUTH-04**: Cryptographic single-use token issuance for email verification and password reset workflows.
+- [x] **AUTH-01**: User registration with username uniqueness, email validation, and Argon2id password hashing.
+- [x] **AUTH-02**: JWT-based access token issuance (15-min) and secure database-backed refresh token rotation (7-day, SHA-256 hashed).
+- [x] **AUTH-03**: Role-based access control (RBAC) enforcing Participant, Organizer, Proctor, and Administrator capabilities.
+- [x] **AUTH-04**: Cryptographic single-use token issuance for email verification and password reset workflows.
 
 ## Contest Lifecycle & Participation (CONTEST)
 
