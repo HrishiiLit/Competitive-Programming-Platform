@@ -14,8 +14,8 @@
     "branching_strategy": "none",
     "create_tag": true,
     "repo_tagging": "single",
-    "phase_branch_template": "gsd/phase-{phase}-{slug}",
-    "milestone_branch_template": "gsd/{milestone}-{slug}",
+    "phase_branch_template": "phase-{phase}-{slug}",
+    "milestone_branch_template": "{milestone}-{slug}",
     "quick_branch_template": null
   },
   "workflow": {
