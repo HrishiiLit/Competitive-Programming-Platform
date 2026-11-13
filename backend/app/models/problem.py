@@ -61,6 +61,7 @@ class ProblemVersion(Base):
 
 class TestCase(Base):
     __tablename__ = "test_cases"
+    __test__ = False
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     problem_version_id = Column(UUID(as_uuid=True), ForeignKey("problem_versions.id", ondelete="CASCADE"), nullable=False, index=True)
