@@ -6,9 +6,9 @@ This roadmap defines the implementation path for a high-performance, fault-toler
 
 ## Phases
 
-- [ ] **Phase 1: Core Foundation, Persistence & Authentication Engine** - Establish PostgreSQL models, Alembic migrations, Argon2id security, JWT tokens, and RBAC authentication APIs.
-- [ ] **Phase 2: Contest Lifecycle & Problem Versioning Engine** - Implement contest timing state machine, problem authoring with versioning, and testcase storage.
-- [ ] **Phase 3: Submission Ingestion, Transactional Outbox & Judge0 Integration** - Build durable submission pipeline, Celery judging workers, and HMAC-verified Judge0 adapter.
+- [x] **Phase 1: Core Foundation, Persistence & Authentication Engine** - Establish PostgreSQL models, Alembic migrations, Argon2id security, JWT tokens, and RBAC authentication APIs.
+- [x] **Phase 2: Contest Lifecycle & Problem Versioning Engine** - Implement contest timing state machine, problem authoring with versioning, and testcase storage.
+- [x] **Phase 3: Submission Ingestion, Transactional Outbox & Judge0 Integration** - Build durable submission pipeline, Celery judging workers, and HMAC-verified Judge0 adapter.
 - [ ] **Phase 4: Scoring Engine & Real-Time Leaderboards** - Implement ICPC score calculation, contest freeze mechanics, and Redis-backed WebSocket standings broadcasts.
 - [ ] **Phase 5: Hybrid Proctoring Subsystem** - Ingest browser blur/switch telemetry, presigned S3 evidence upload pipeline, suspicion index scoring, and proctor review.
 - [ ] **Phase 6: Next.js Frontend & Monaco IDE** - Build responsive user interface with Monaco editor, contest arena, and proctor dashboard.
@@ -52,7 +52,8 @@ Plans:
   1. Submissions are saved durably in PostgreSQL with an associated outbox record before background dispatch.
   2. Celery workers dispatch code runs to Judge0 and handle callbacks with HMAC-SHA256 verification.
   3. Bounded polling fallback recovers orphaned or delayed submissions.
-**Plans**: 1 plan
+**Plans**: 1/1 plans executed
+- [x] 03-01-PLAN.md
 
 ### Phase 4: Scoring Engine & Real-Time Leaderboards
 **Goal**: Deliver ICPC scoring, tie-breaking rules, scoreboard freeze logic, and WebSocket leaderboard broadcasts.

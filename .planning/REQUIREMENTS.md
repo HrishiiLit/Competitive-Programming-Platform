@@ -21,16 +21,16 @@
 
 ## Submission & Outbox Delivery (SUBMIT)
 
-- [ ] **SUBMIT-01**: Durable submission ingestion persisting directly to PostgreSQL before queue publication.
-- [ ] **SUBMIT-02**: Transactional outbox event creation ensuring zero submission loss under message broker transient failures.
-- [ ] **SUBMIT-03**: Submission rate limiting per user per problem (e.g., max 1 submission every 5 seconds).
+- [x] **SUBMIT-01**: Durable submission ingestion persisting directly to PostgreSQL before queue publication.
+- [x] **SUBMIT-02**: Transactional outbox event creation ensuring zero submission loss under message broker transient failures.
+- [x] **SUBMIT-03**: Submission rate limiting per user per problem (e.g., max 1 submission every 5 seconds).
 
 ## Judging Engine & Judge0 Integration (JUDGE)
 
-- [ ] **JUDGE-01**: Celery worker consuming outbox events and dispatching code runs to Judge0 CE.
-- [ ] **JUDGE-02**: Judge0 callback validation using HMAC-SHA256 signature verification.
-- [ ] **JUDGE-03**: Bounded polling fallback for Judge0 results when webhook callbacks are delayed or lost.
-- [ ] **JUDGE-04**: Test execution result mapping (`AC`, `WA`, `TLE`, `MLE`, `RE`, `CE`, `IE`).
+- [x] **JUDGE-01**: Celery worker consuming outbox events and dispatching code runs to Judge0 CE.
+- [x] **JUDGE-02**: Judge0 callback validation using HMAC-SHA256 signature verification.
+- [x] **JUDGE-03**: Bounded polling fallback for Judge0 results when webhook callbacks are delayed or lost.
+- [x] **JUDGE-04**: Test execution result mapping (`AC`, `WA`, `TLE`, `MLE`, `RE`, `CE`, `IE`).
 
 ## Scoring & Real-Time Leaderboards (SCORE)
 
