@@ -38,6 +38,7 @@ venv.bak/
 
 # Testing & Coverage
 .coverage
+.planning/state.json
 .coverage.*
 nosetests.xml
 coverage.xml
