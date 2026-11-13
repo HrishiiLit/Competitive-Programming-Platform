@@ -37,12 +37,12 @@ class Submission(Base):
     submitted_at = Column(DateTime(timezone=True), nullable=False, default=utc_now, index=True)
     judged_at = Column(DateTime(timezone=True), nullable=True)
 
-    user = relationship("User")
-    contest = relationship("Contest")
-    problem = relationship("Problem")
-    problem_version = relationship("ProblemVersion")
-    language = relationship("Language")
-    runs = relationship("SubmissionRun", back_populates="submission", cascade="all, delete-orphan", order_by="SubmissionRun.created_at")
+    user = relationship("User", lazy="selectin")
+    contest = relationship("Contest", lazy="selectin")
+    problem = relationship("Problem", lazy="selectin")
+    problem_version = relationship("ProblemVersion", lazy="selectin")
+    language = relationship("Language", lazy="selectin")
+    runs = relationship("SubmissionRun", back_populates="submission", cascade="all, delete-orphan", order_by="SubmissionRun.created_at", lazy="selectin")
 
 
 class SubmissionRun(Base):
@@ -58,7 +58,7 @@ class SubmissionRun(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=utc_now)
 
     submission = relationship("Submission", back_populates="runs")
-    test_case = relationship("TestCase")
+    test_case = relationship("TestCase", lazy="selectin")
 
 
 class OutboxEvent(Base):
