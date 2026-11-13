@@ -85,8 +85,15 @@ class AuthService:
             db.add(user_role)
 
         await db.commit()
-        await db.refresh(user)
-        return user
+
+        # Reload with selectinload
+        reload_stmt = (
+            select(User)
+            .options(selectinload(User.user_roles).selectinload(UserRole.role))
+            .where(User.id == user.id)
+        )
+        reload_res = await db.execute(reload_stmt)
+        return reload_res.scalar_one()
 
     @staticmethod
     async def authenticate_user(
@@ -186,7 +193,11 @@ class AuthService:
             await db.commit()
             raise ValueError("Refresh token replay detected. All sessions revoked for security.")
 
-        if token_record.expires_at <= now:
+        expires_at = token_record.expires_at
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+        if expires_at <= now:
             raise ValueError("Refresh token expired")
 
         # Revoke current token

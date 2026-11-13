@@ -33,7 +33,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=utc_now)
     updated_at = Column(DateTime(timezone=True), nullable=False, default=utc_now, onupdate=utc_now)
 
-    user_roles = relationship("UserRole", back_populates="user", cascade="all, delete-orphan")
+    user_roles = relationship("UserRole", back_populates="user", cascade="all, delete-orphan", lazy="selectin")
     refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
 
 
@@ -55,7 +55,7 @@ class UserRole(Base):
     assigned_at = Column(DateTime(timezone=True), nullable=False, default=utc_now)
 
     user = relationship("User", back_populates="user_roles")
-    role = relationship("Role", back_populates="user_roles")
+    role = relationship("Role", back_populates="user_roles", lazy="selectin")
 
 
 class RefreshToken(Base):
