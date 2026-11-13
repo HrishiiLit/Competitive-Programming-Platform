@@ -38,9 +38,9 @@ class Contest(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=utc_now)
     updated_at = Column(DateTime(timezone=True), nullable=False, default=utc_now, onupdate=utc_now)
 
-    organizer = relationship("User", foreign_keys=[organizer_id])
-    contest_problems = relationship("ContestProblem", back_populates="contest", cascade="all, delete-orphan", order_by="ContestProblem.order_letter")
-    registrations = relationship("ContestRegistration", back_populates="contest", cascade="all, delete-orphan")
+    organizer = relationship("User", foreign_keys=[organizer_id], lazy="selectin")
+    contest_problems = relationship("ContestProblem", back_populates="contest", cascade="all, delete-orphan", order_by="ContestProblem.order_letter", lazy="selectin")
+    registrations = relationship("ContestRegistration", back_populates="contest", cascade="all, delete-orphan", lazy="selectin")
 
 
 class ContestProblem(Base):
@@ -60,7 +60,7 @@ class ContestProblem(Base):
     )
 
     contest = relationship("Contest", back_populates="contest_problems")
-    problem = relationship("Problem")
+    problem = relationship("Problem", lazy="selectin")
 
 
 class ContestRegistration(Base):

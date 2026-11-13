@@ -29,8 +29,8 @@ class Problem(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=utc_now)
     updated_at = Column(DateTime(timezone=True), nullable=False, default=utc_now, onupdate=utc_now)
 
-    author = relationship("User", foreign_keys=[author_id])
-    versions = relationship("ProblemVersion", back_populates="problem", cascade="all, delete-orphan", order_by="desc(ProblemVersion.version_number)")
+    author = relationship("User", foreign_keys=[author_id], lazy="selectin")
+    versions = relationship("ProblemVersion", back_populates="problem", cascade="all, delete-orphan", order_by="desc(ProblemVersion.version_number)", lazy="selectin")
 
 
 class ProblemVersion(Base):
@@ -56,7 +56,7 @@ class ProblemVersion(Base):
     )
 
     problem = relationship("Problem", back_populates="versions")
-    test_cases = relationship("TestCase", back_populates="problem_version", cascade="all, delete-orphan", order_by="TestCase.order_num")
+    test_cases = relationship("TestCase", back_populates="problem_version", cascade="all, delete-orphan", order_by="TestCase.order_num", lazy="selectin")
 
 
 class TestCase(Base):
