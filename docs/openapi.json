@@ -1,0 +1,398 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Competitive Programming Platform API",
+    "version": "1.1.0",
+    "description": "Production API specification for Competitive Programming Platform with Hybrid Proctoring."
+  },
+  "servers": [
+    {
+      "url": "/api/v1",
+      "description": "API v1 Endpoint"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "User Registration",
+        "operationId": "registerUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserRegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErrorResponse" },
+          "409": { "$ref": "#/components/responses/ErrorResponse" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "User Login",
+        "operationId": "loginUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserLoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated successfully",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Sets access_token and refresh_token HttpOnly cookies",
+                "schema": { "type": "string" }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AuthSuccessResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/ErrorResponse" }
+        }
+      }
+    },
+    "/contests": {
+      "get": {
+        "summary": "List Contests",
+        "operationId": "listContests",
+        "parameters": [
+          { "name": "status", "in": "query", "schema": { "type": "string", "enum": ["DRAFT", "SCHEDULED", "LIVE", "COMPLETED", "CANCELLED"] } },
+          { "name": "cursor", "in": "query", "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 20 } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ContestListResponse" }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Contest Draft",
+        "operationId": "createContest",
+        "security": [{ "cookieAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ContestCreateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ContestDetail" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/ErrorResponse" },
+          "403": { "$ref": "#/components/responses/ErrorResponse" }
+        }
+      }
+    },
+    "/submissions": {
+      "post": {
+        "summary": "Submit Solution",
+        "operationId": "createSubmission",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SubmissionCreateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Submission accepted for judging",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SubmissionAcceptedResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/ErrorResponse" },
+          "401": { "$ref": "#/components/responses/ErrorResponse" },
+          "403": { "$ref": "#/components/responses/ErrorResponse" },
+          "409": { "$ref": "#/components/responses/ErrorResponse" },
+          "429": { "$ref": "#/components/responses/ErrorResponse" }
+        }
+      }
+    },
+    "/drafts/{contestId}/{problemVersionId}": {
+      "get": {
+        "summary": "Get Draft",
+        "operationId": "getDraft",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          { "name": "contestId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "problemVersionId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DraftResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Save Draft (Optimistic Concurrency)",
+        "operationId": "saveDraft",
+        "security": [{ "cookieAuth": [] }],
+        "parameters": [
+          { "name": "contestId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } },
+          { "name": "problemVersionId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DraftUpdateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DraftResponse" }
+              }
+            }
+          },
+          "409": { "$ref": "#/components/responses/ErrorResponse" }
+        }
+      }
+    },
+    "/contests/{id}/leaderboard": {
+      "get": {
+        "summary": "Get Contest Standings",
+        "operationId": "getLeaderboard",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LeaderboardResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "access_token"
+      },
+      "csrfToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CSRF-Token"
+      }
+    },
+    "responses": {
+      "ErrorResponse": {
+        "description": "Standard error payload",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string" },
+                    "message": { "type": "string" },
+                    "details": { "type": "object" },
+                    "request_id": { "type": "string", "format": "uuid" }
+                  },
+                  "required": ["code", "message", "request_id"]
+                }
+              },
+              "required": ["error"]
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "UserRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string", "minLength": 3, "maxLength": 30 },
+          "email": { "type": "string", "format": "email" },
+          "full_name": { "type": "string" },
+          "password": { "type": "string", "minLength": 8 }
+        },
+        "required": ["username", "email", "full_name", "password"]
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "full_name": { "type": "string" },
+          "email_verified": { "type": "boolean" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "UserLoginRequest": {
+        "type": "object",
+        "properties": {
+          "identity": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["identity", "password"]
+      },
+      "AuthSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "user": { "$ref": "#/components/schemas/UserResponse" }
+        }
+      },
+      "ContestCreateRequest": {
+        "type": "object",
+        "properties": {
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "start_time": { "type": "string", "format": "date-time" },
+          "end_time": { "type": "string", "format": "date-time" },
+          "registration_deadline": { "type": "string", "format": "date-time" },
+          "visibility": { "type": "string", "enum": ["PUBLIC", "PRIVATE"] },
+          "max_participants": { "type": "integer" },
+          "scoring_type": { "type": "string", "enum": ["ICPC"] },
+          "wrong_penalty_minutes": { "type": "integer", "default": 20 },
+          "freeze_starts_at": { "type": "string", "format": "date-time", "nullable": true },
+          "allowed_languages": { "type": "array", "items": { "type": "string" } },
+          "proctoring_config": { "type": "object" }
+        },
+        "required": ["slug", "title", "start_time", "end_time", "registration_deadline", "visibility", "max_participants"]
+      },
+      "ContestDetail": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "type": "string" },
+          "start_time": { "type": "string", "format": "date-time" },
+          "end_time": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ContestListResponse": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/ContestDetail" } },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "limit": { "type": "integer" },
+              "next_cursor": { "type": "string", "nullable": true },
+              "has_more": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "SubmissionCreateRequest": {
+        "type": "object",
+        "properties": {
+          "contest_id": { "type": "string", "format": "uuid" },
+          "contest_problem_id": { "type": "string", "format": "uuid" },
+          "language_id": { "type": "string", "format": "uuid" },
+          "source_code": { "type": "string", "maxLength": 65536 }
+        },
+        "required": ["contest_id", "contest_problem_id", "language_id", "source_code"]
+      },
+      "SubmissionAcceptedResponse": {
+        "type": "object",
+        "properties": {
+          "submission_id": { "type": "string", "format": "uuid" },
+          "verdict": { "type": "string", "enum": ["PENDING"] },
+          "submitted_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DraftUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "source_code": { "type": "string" },
+          "language_id": { "type": "string", "format": "uuid" },
+          "expected_version": { "type": "integer" }
+        },
+        "required": ["source_code", "language_id", "expected_version"]
+      },
+      "DraftResponse": {
+        "type": "object",
+        "properties": {
+          "source_code": { "type": "string" },
+          "language_id": { "type": "string", "format": "uuid" },
+          "version": { "type": "integer" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "LeaderboardResponse": {
+        "type": "object",
+        "properties": {
+          "contest_id": { "type": "string", "format": "uuid" },
+          "is_frozen": { "type": "boolean" },
+          "standings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "rank": { "type": "integer" },
+                "participant_id": { "type": "string", "format": "uuid" },
+                "username": { "type": "string" },
+                "problems_solved": { "type": "integer" },
+                "total_penalty": { "type": "integer" },
+                "last_accepted_at": { "type": "string", "format": "date-time", "nullable": true },
+                "problem_results": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
