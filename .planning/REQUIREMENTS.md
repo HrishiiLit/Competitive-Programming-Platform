@@ -9,15 +9,15 @@
 
 ## Contest Lifecycle & Participation (CONTEST)
 
-- [ ] **CONTEST-01**: Contest authoring with fixed-window start/end timing, scoreboard freeze threshold, and unfreeze scheduling.
-- [ ] **CONTEST-02**: Participant contest registration, eligibility enforcement, and server-authoritative timer synchronization.
-- [ ] **CONTEST-03**: Server-side contest status state machine (`DRAFT`, `UPCOMING`, `ACTIVE`, `FROZEN`, `COMPLETED`, `FINALIZED`).
+- [x] **CONTEST-01**: Contest authoring with fixed-window start/end timing, scoreboard freeze threshold, and unfreeze scheduling.
+- [x] **CONTEST-02**: Participant contest registration, eligibility enforcement, and server-authoritative timer synchronization.
+- [x] **CONTEST-03**: Server-side contest status state machine (`DRAFT`, `UPCOMING`, `ACTIVE`, `FROZEN`, `COMPLETED`, `FINALIZED`).
 
 ## Problem Management & Testcases (PROBLEM)
 
-- [ ] **PROBLEM-01**: Versioned problem authoring with Markdown/LaTeX statements, time/memory limits, and language permissions.
-- [ ] **PROBLEM-02**: Problem immutability enforcement when bound to an active or concluded contest.
-- [ ] **PROBLEM-03**: Test case management separating public sample test cases from encrypted/hidden evaluation suites.
+- [x] **PROBLEM-01**: Versioned problem authoring with Markdown/LaTeX statements, time/memory limits, and language permissions.
+- [x] **PROBLEM-02**: Problem immutability enforcement when bound to an active or concluded contest.
+- [x] **PROBLEM-03**: Test case management separating public sample test cases from encrypted/hidden evaluation suites.
 
 ## Submission & Outbox Delivery (SUBMIT)
 
